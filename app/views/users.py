@@ -3,7 +3,7 @@ from flask import request, Blueprint
 from . import json_response
 from ..models import db
 from ..models.users import User
-from ..utils.validate import validate_email
+from ..utils.validate import validate_email, validate_uuid
 from ..config import Config
 
 import requests
@@ -77,6 +77,11 @@ def change_subscribe_service_info():
         return json_response({'errorMsg': 'please check your request data'}, 400)
 
     try:
+        if len(uuid) == 0:
+            return json_response({'errorMsg': 'please check uuid'}, 422)
+        if not validate_uuid(uuid):
+            return json_response({'errorMsg': 'wrong format of uuid'}, 422)
+
         if len(new_name) == 0 and len(new_email) == 0:
             return json_response({'errorMsg': 'please check new_name and new_email'}, 422)
         if not validate_email(new_email):
