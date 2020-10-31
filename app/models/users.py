@@ -29,7 +29,7 @@ class User(db.Model):
     def __repr__(self) -> str:
         return f"<user name: {self.name}, email: {self.email}"
 
-    def save(self) -> str:
+    def create(self) -> str:
         db.session.add(self)
         return self.uuid
 
