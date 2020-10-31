@@ -22,6 +22,9 @@ class Config:
     CORS_METHODS = get_env_variable("CORS_METHODS")
     CORS_HEADERS = get_env_variable("CORS_HEADERS")
 
+    HERRENCORP_MAIL_URL = get_env_variable("HERRENCORP_MAIL_URL")
+    HERRENCORP_MAIL_AUTH = get_env_variable("HERRENCORP_MAIL_AUTH")
+
 
 class DevelopmentConfig(Config):
     DEBUG = True

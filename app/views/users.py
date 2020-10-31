@@ -4,6 +4,7 @@ from . import json_response
 from ..models import db
 from ..models.users import User
 from ..utils.validate import validate_email
+from ..config import Config
 
 import requests
 
@@ -104,12 +105,11 @@ def send_mail_to_all_users():
 
     for user in users:
         headers = {
-            'Authorization': 'herren-recruit-python',
+            'Authorization': Config.HERRENCORP_MAIL_AUTH,
             'Content-Type': 'application/x-www-form-urlencoded',
         }
         data = {'mailto': user.email, 'subject': subject, 'content': content}
-        # TODO: add url to config
-        res = requests.post('http://python.recruit.herrencorp.com/api/v1/mail', data=data, headers=headers)
+        res = requests.post(Config.HERRENCORP_MAIL_URL, data=data, headers=headers)
         if res.status_code != 201:
             return json_response({'errorMsg': f"fail to send an email to {user.email}"}, 500)
 
