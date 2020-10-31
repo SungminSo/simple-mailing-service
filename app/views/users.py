@@ -48,3 +48,21 @@ def subscribe_service():
     except IntegrityError:
         db.session.rollback()
         return json_response({'errorMsg': 'fail to subscribe'}, 409)
+
+
+@user_api.route('/unsubscribe/<string:uuid>/<string:email>', methods=['DELETE'])
+def unsubscribe_service(uuid: str, email: str):
+    if not validate_email(email):
+        return json_response({'errorMsg': 'wrong format of email'}, 422)
+
+    user = User.get_user_by_email(email)
+    if not user:
+        return json_response({'errorMsg': f"{email} does not subscribe to the subscribe"}, 404)
+
+    if user.uuid != uuid:
+        return json_response({'errorMsg': 'permission denied'}, 403)
+
+    user.delete()
+    db.session.commit()
+
+    return json_response({}, 204)
