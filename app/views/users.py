@@ -9,7 +9,23 @@ from ..utils.validate import validate_email
 user_api = Blueprint('user', __name__)
 
 
-@user_api.route('/subscribe', methods=['POST'])
+@user_api.route('/users/<int:page>', methods=['GET'])
+def get_user_list(page: int):
+    users = User.get_all_users(page=page)
+
+    ret_users = []
+    for user in users:
+        ret_users.append({
+            'uuid': user.uuid,
+            'name': user.name,
+            'email': user.email,
+            'created_at': user.created_at,
+        })
+
+    return json_response({'user': ret_users}, 200)
+
+
+@user_api.route('/users/subscribe', methods=['POST'])
 def subscribe_service():
     try:
         req_data = request.get_json()
@@ -50,7 +66,7 @@ def subscribe_service():
         return json_response({'errorMsg': 'fail to subscribe'}, 409)
 
 
-@user_api.route('/unsubscribe/<string:uuid>/<string:email>', methods=['DELETE'])
+@user_api.route('/users/unsubscribe/<string:uuid>/<string:email>', methods=['DELETE'])
 def unsubscribe_service(uuid: str, email: str):
     if not validate_email(email):
         return json_response({'errorMsg': 'wrong format of email'}, 422)
