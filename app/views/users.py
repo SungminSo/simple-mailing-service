@@ -100,8 +100,18 @@ def change_subscribe_service_info():
 
 @user_api.route('/users/subscribe/<string:uuid>/<string:email>', methods=['DELETE'])
 def unsubscribe_service(uuid: str, email: str):
-    if not validate_email(email):
-        return json_response({'errorMsg': 'wrong format of email'}, 422)
+    try:
+        if len(uuid) == 0:
+            return json_response({'errorMsg': 'please check uuid'}, 422)
+        if not validate_uuid(uuid):
+            return json_response({'errorMsg': 'wrong format of uuid'}, 422)
+
+        if len(email) == 0:
+            return json_response({'errorMsg': 'please check email'}, 422)
+        if not validate_email(email):
+            return json_response({'errorMsg': 'wrong format of email'}, 422)
+    except TypeError:
+        return json_response({'errorMsg': 'please check uuid, email data type'}, 400)
 
     user = User.get_user_by_email(email)
     if not user:
