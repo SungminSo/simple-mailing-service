@@ -32,9 +32,9 @@ class User(db.Model):
         return self.uuid
 
     def update(self, new_name: str, new_email: str) -> str:
-        if self.name != new_name:
+        if len(new_name) != 0 and self.name != new_name:
             setattr(self, 'name', new_name)
-        if self.email != new_email:
+        if len(new_email) != 0 and self.email != new_email:
             setattr(self, 'email', new_email)
         self.updated_at = datetime.utcnow()
         return self.uuid
@@ -53,5 +53,9 @@ class User(db.Model):
         return users_list
 
     @staticmethod
-    def get_user_by_email(email: str):
-        return User.query.filter_by(email=email).first()
+    def get_user_by_email(user_email: str):
+        return User.query.filter_by(email=user_email).first()
+
+    @staticmethod
+    def get_user_by_uuid(user_uuid: str):
+        return User.query.filter_by(uuid=user_uuid).first()

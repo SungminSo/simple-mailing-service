@@ -64,6 +64,35 @@ def subscribe_service():
     return json_response({'uuid': user_uuid}, 201)
 
 
+@user_api.route('/users/subscribe', methods=['PATCH'])
+def change_subscribe_service_info():
+    try:
+        req_data = request.get_json()
+        uuid = req_data['uuid']
+        new_name = req_data['new_name']
+        new_email = req_data['new_email']
+    except TypeError:
+        return json_response({'errorMsg': 'please send request data'}, 400)
+    except KeyError:
+        return json_response({'errorMsg': 'please check your request data'}, 400)
+
+    try:
+        if len(new_name) == 0 and len(new_email) == 0:
+            return json_response({'errorMsg': 'please check new_name and new_email'}, 422)
+        if not validate_email(new_email):
+            return json_response({'errorMsg': 'wrong format of email'}, 422)
+    except TypeError:
+        return json_response({'errorMsg': 'please check uuid, new_name and new_email data type'}, 400)
+
+    user = User.get_user_by_uuid(uuid)
+    if not user:
+        return json_response({'errorMsg': 'cannot found subscribe info'}, 404)
+
+    user.update(new_name, new_email)
+    db.session.commit()
+    return json_response({'uuid': user.uuid}, 200)
+
+
 @user_api.route('/users/unsubscribe/<string:uuid>/<string:email>', methods=['DELETE'])
 def unsubscribe_service(uuid: str, email: str):
     if not validate_email(email):
