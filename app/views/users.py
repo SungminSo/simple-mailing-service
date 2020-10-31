@@ -1,5 +1,4 @@
 from flask import request, Blueprint
-from sqlalchemy.exc import IntegrityError
 
 from . import json_response
 from ..models import db
@@ -58,15 +57,7 @@ def subscribe_service():
         email=email,
     )
 
-    # # create a savepoint in case of race condition
-    # db.session.begin_nested()
-    # try:
-    #     user_uuid = user.create()
-    #     db.session.commit()
-    #     return json_response({'uuid': user_uuid}, 201)
-    # except IntegrityError:
-    #     db.session.rollback()
-    #     return json_response({'errorMsg': 'fail to subscribe'}, 409)
+    # TODO: race condition handling
     user_uuid = user.create()
     db.session.commit()
     return json_response({'uuid': user_uuid}, 201)
@@ -84,6 +75,7 @@ def unsubscribe_service(uuid: str, email: str):
     if user.uuid != uuid:
         return json_response({'errorMsg': 'permission denied'}, 403)
 
+    # TODO: race condition handling
     user.delete()
     db.session.commit()
 
@@ -107,6 +99,7 @@ def send_mail_to_all_users():
     except TypeError:
         return json_response({'errorMsg': 'please check subject and content data type'}, 400)
 
+    # TODO: need to change handling user list
     users = User.get_all_users(page=1)
 
     for user in users:
@@ -115,10 +108,9 @@ def send_mail_to_all_users():
             'Content-Type': 'application/x-www-form-urlencoded',
         }
         data = {'mailto': user.email, 'subject': subject, 'content': content}
+        # TODO: add url to config
         res = requests.post('http://python.recruit.herrencorp.com/api/v1/mail', data=data, headers=headers)
         if res.status_code != 201:
-            print(res.status_code)
-            print(res.content)
             return json_response({'errorMsg': f"fail to send an email to {user.email}"}, 500)
 
     return json_response({'status': 'success'}, 201)

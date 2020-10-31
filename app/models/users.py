@@ -1,7 +1,5 @@
 from datetime import datetime
-#
 from sqlalchemy.exc import OperationalError
-#
 from . import db
 
 import uuid
@@ -33,7 +31,7 @@ class User(db.Model):
         db.session.add(self)
         return self.uuid
 
-    def update(self, new_name: str, new_email: str):
+    def update(self, new_name: str, new_email: str) -> str:
         if self.name != new_name:
             setattr(self, 'name', new_name)
         if self.email != new_email:
@@ -45,7 +43,8 @@ class User(db.Model):
         db.session.delete(self)
 
     @staticmethod
-    def get_all_users(page: int) -> list:
+    def get_all_users(page: int):
+        # TODO: pagination
         try:
             users_list = User.query.order_by(User.id.desc()).all()
         except OperationalError:
