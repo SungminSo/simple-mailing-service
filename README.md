@@ -49,6 +49,7 @@ make install-dev
 |POSTGRES_USER      |developer       |
 |POSTGRES_DB_NAME   |mailing         |
 |POSTGRES_TEST_DB_NAME|mail_test     |
+|POSTGRES_PROD_DB_NAME|mail_prod     |
 |POSTGRES_PASSWORD  |password        |
 |CORS_ORIGINS       |*               |
 |CORS_METHODS       |GET,POST,PATCH,DELETE,OPTIONS|
