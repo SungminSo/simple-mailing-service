@@ -44,9 +44,8 @@ class User(db.Model):
 
     @staticmethod
     def get_all_users(page: int):
-        # TODO: pagination
         try:
-            users_list = User.query.order_by(User.id.desc()).all()
+            users_list = User.query.order_by(User.id.desc()).paginate(page, per_page=USERS_PER_PAGE)
         except OperationalError:
             users_list = None
 

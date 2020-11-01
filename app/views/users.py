@@ -17,17 +17,20 @@ user_api = Blueprint('user', __name__)
 @user_api.route('/users/<int:page>', methods=['GET'])
 def get_user_list(page: int):
     users = User.get_all_users(page=page)
+    if not users:
+        return json_response({'errorMsg': 'no users in this page'}, 404)
 
     ret_users = []
-    for user in users:
+    for user in users.items:
         ret_users.append({
             'uuid': user.uuid,
             'name': user.name,
             'email': user.email,
             'created_at': user.created_at,
+            'updated_at': user.updated_at,
         })
 
-    return json_response({'user': ret_users}, 200)
+    return json_response({'total': users.total, 'users': ret_users}, 200)
 
 
 @user_api.route('/users/subscribe', methods=['POST'])
@@ -147,7 +150,7 @@ def send_mail_to_all_users():
     # TODO: need to change handling user list
     users = User.get_all_users(page=1)
 
-    for user in users:
+    for user in users.items:
         headers = {
             'Authorization': Config.HERRENCORP_MAIL_AUTH,
             'Content-Type': 'application/x-www-form-urlencoded',
