@@ -153,8 +153,30 @@ def send_mail_to_all_users():
             'Content-Type': 'application/x-www-form-urlencoded',
         }
         data = {'mailto': user.email, 'subject': subject, 'content': content}
-        res = requests.post(Config.HERRENCORP_MAIL_URL, data=data, headers=headers)
+        url = Config.HERRENCORP_BASE_URL + Config.HERRENCORP_SEND_MAIL_URL
+        res = requests.post(url, data=data, headers=headers)
         if res.status_code != 201:
             return json_response({'errorMsg': f"fail to send an email to {user.email}"}, 500)
 
     return json_response({'status': 'success'}, 201)
+
+
+@user_api.route('/mails/<string:email>', methods=['GET'])
+def get_user_mails(email: str):
+    try:
+        if len(email) == 0:
+            return json_response({'errorMsg': 'please check email'}, 422)
+        if not validate_email(email):
+            return json_response({'errorMsg': 'wrong format of email'}, 422)
+    except TypeError:
+        return json_response({'errorMsg': 'please check email data type'}, 400)
+
+    headers = {
+        'Authorization': Config.HERRENCORP_MAIL_AUTH,
+    }
+    url = Config.HERRENCORP_BASE_URL + Config.HERRENCORP_GET_MAIL_URL + email
+    res = requests.get(url, headers=headers)
+    if res.status_code != 200:
+        return json_response({'errorMsg': res.json()}, res.status_code)
+
+    return json_response({'mails': res.json()}, 200)
