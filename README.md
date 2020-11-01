@@ -81,6 +81,7 @@ make install-dev
     - env.py
     - README
     - script.py.mako
+- .flake8
 - .gitignore
 - docker-compose.yml
 - Dockerfile
