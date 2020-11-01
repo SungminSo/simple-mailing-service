@@ -35,6 +35,7 @@ class DevelopmentConfig(Config):
 class TestConfig(Config):
     DEBUG = True
     TESTING = True
+    POSTGRES_DB_NAME = get_env_variable("POSTGRES_TEST_DB_NAME")
 
 
 class ProductionConfig(Config):
