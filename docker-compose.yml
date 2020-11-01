@@ -19,7 +19,7 @@ services:
             - HERRENCORP_SEND_MAIL_URL=/api/v1/mail
             - HERRENCORP_GET_MAIL_URL=/api/v1/inbox/
         ports:
-            - "127.0.0.1:5000:5000"
+            - "0.0.0.0:5000:5000"
         depends_on:
             - postgres
     postgres:
@@ -31,7 +31,7 @@ services:
         volumes:
             - postgres-data:/var/lib/postgresql/data
         ports:
-            - "127.0.0.1:20000:5432"
+            - "0.0.0.0:20000:5432"
 
 volumes:
     postgres-data:
