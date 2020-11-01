@@ -134,3 +134,50 @@ def test_change_subscribe_service_info_422(api):
     assert res.status_code == 422
     error_msg = res.json['errorMsg']
     assert error_msg == 'wrong format of email'
+
+
+def test_unsubscribe_service(api):
+    email = 'test11@gmail.com'
+    data = {'name': 'test11', 'email': email}
+    res = api.post('/api/v1/users/subscribe', data=json.dumps(data), content_type='application/json')
+    assert res.status_code == 201
+    user_uuid = res.json['uuid']
+    assert type(uuid.UUID(user_uuid)) == uuid.UUID
+
+    res = api.delete(f'/api/v1/users/subscribe/{user_uuid}/{email}')
+    assert res.status_code == 204
+
+
+def test_unsubscribe_service_403(api):
+    email = 'test12@gmail.com'
+    data = {'name': 'test12', 'email': email}
+    res = api.post('/api/v1/users/subscribe', data=json.dumps(data), content_type='application/json')
+    assert res.status_code == 201
+    user_uuid = res.json['uuid']
+    assert type(uuid.UUID(user_uuid)) == uuid.UUID
+
+    res = api.delete(f'/api/v1/users/subscribe/{str(uuid.uuid4())}/{email}')
+    assert res.status_code == 403
+    error_msg = res.json['errorMsg']
+    assert error_msg == 'permission denied'
+
+
+def test_unsubscribe_service_404(api):
+    email = 'test13@gmail.com'
+    res = api.delete(f'/api/v1/users/subscribe/{str(uuid.uuid4())}/{email}')
+    assert res.status_code == 404
+
+    error_msg = res.json['errorMsg']
+    assert error_msg == f'{email} does not subscribe to the subscribe'
+
+
+def test_unsubscribe_service_422(api):
+    res = api.delete(f'/api/v1/users/subscribe/{"uuid"}/{"test13@gmail.com"}')
+    assert res.status_code == 422
+    error_msg = res.json['errorMsg']
+    assert error_msg == 'wrong format of uuid'
+
+    res = api.delete(f'/api/v1/users/subscribe/{str(uuid.uuid4())}/{"email"}')
+    assert res.status_code == 422
+    error_msg = res.json['errorMsg']
+    assert error_msg == 'wrong format of email'
