@@ -12,6 +12,7 @@ flask-migrate = "*"
 flask-script = "*"
 flask-cors = "*"
 sqlalchemy = "*"
+requests = "*"
 
 [requires]
 python_version = "3.8"
