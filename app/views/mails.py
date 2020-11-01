@@ -56,8 +56,6 @@ def send_mail_to_all_users():
 @mail_api.route('/mails/<string:email>', methods=['GET'])
 def get_user_mails(email: str):
     try:
-        if len(email) == 0:
-            return json_response({'errorMsg': 'please check email'}, 422)
         if not validate_email(email):
             return json_response({'errorMsg': 'wrong format of email'}, 422)
     except TypeError:
