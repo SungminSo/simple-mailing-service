@@ -16,6 +16,7 @@ requests = "*"
 flake8 = "*"
 pytest = "*"
 werkzeug = "*"
+psycopg2-binary = "*"
 
 [requires]
 python_version = "3.8"

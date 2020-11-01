@@ -8,7 +8,8 @@ services:
             - POSTGRES_PORT=5432
             - POSTGRES_USER=developer
             - POSTGRES_DB_NAME=mailing
-            - POSTGRES_PASSWORD=devpassword
+            - POSTGRES_TEST_DB_NAME=mail_test
+            - POSTGRES_PASSWORD=password
             - CORS_ORIGINS=*
             - CORS_METHODS=GET,POST,PATCH,DELETE,OPTIONS
             - CORS_HEADERS=Origin,Authorization,Content-Type

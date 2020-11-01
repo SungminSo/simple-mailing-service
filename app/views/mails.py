@@ -34,7 +34,7 @@ def send_mail_to_all_users():
         user_page = user_num // USERS_PER_PAGE
 
     fail_to_send = []
-    for page in range(1, user_page):
+    for page in range(1, user_page + 1):
         users = User.get_all_users(page=page)
 
         for user in users.items:
