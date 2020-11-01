@@ -127,7 +127,7 @@ def unsubscribe_service(uuid: str, email: str):
     return json_response({}, 204)
 
 
-@user_api.route('/mail', methods=['POST'])
+@user_api.route('/mails', methods=['POST'])
 def send_mail_to_all_users():
     try:
         req_data = request.get_json()
