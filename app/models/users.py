@@ -43,6 +43,10 @@ class User(db.Model):
         db.session.delete(self)
 
     @staticmethod
+    def get_users_count():
+        return User.query.count()
+
+    @staticmethod
     def get_all_users(page: int):
         try:
             users_list = User.query.order_by(User.id.desc()).paginate(page, per_page=USERS_PER_PAGE)

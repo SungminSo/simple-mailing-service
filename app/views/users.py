@@ -2,7 +2,7 @@ from flask import request, Blueprint
 
 from . import json_response
 from ..models import db
-from ..models.users import User
+from ..models.users import User, USERS_PER_PAGE
 from ..utils.validate import validate_email, validate_uuid
 from ..config import Config
 
@@ -147,20 +147,29 @@ def send_mail_to_all_users():
     except TypeError:
         return json_response({'errorMsg': 'please check subject and content data type'}, 400)
 
-    # TODO: need to change handling user list
-    users = User.get_all_users(page=1)
+    user_num = User.get_users_count()
+    if user_num % USERS_PER_PAGE != 0:
+        user_page = (user_num // USERS_PER_PAGE) + 1
+    else:
+        user_page = user_num // USERS_PER_PAGE
 
-    for user in users.items:
-        headers = {
-            'Authorization': Config.HERRENCORP_MAIL_AUTH,
-            'Content-Type': 'application/x-www-form-urlencoded',
-        }
-        data = {'mailto': user.email, 'subject': subject, 'content': content}
-        url = Config.HERRENCORP_BASE_URL + Config.HERRENCORP_SEND_MAIL_URL
-        res = requests.post(url, data=data, headers=headers)
-        if res.status_code != 201:
-            return json_response({'errorMsg': f"fail to send an email to {user.email}"}, 500)
+    fail_to_send = []
+    for page in range(1, user_page):
+        users = User.get_all_users(page=page)
 
+        for user in users.items:
+            headers = {
+                'Authorization': Config.HERRENCORP_MAIL_AUTH,
+                'Content-Type': 'application/x-www-form-urlencoded',
+            }
+            data = {'mailto': user.email, 'subject': subject, 'content': content}
+            url = Config.HERRENCORP_BASE_URL + Config.HERRENCORP_SEND_MAIL_URL
+            res = requests.post(url, data=data, headers=headers)
+            if res.status_code != 201:
+                fail_to_send.append(user.email)
+
+    if len(fail_to_send) != 0:
+        return json_response({'errorMsg': f"fail to send email", 'fail_list': fail_to_send}, 500)
     return json_response({'status': 'success'}, 201)
 
 
