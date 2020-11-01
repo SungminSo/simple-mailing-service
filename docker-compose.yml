@@ -12,8 +12,10 @@ services:
             - CORS_ORIGINS=*
             - CORS_METHODS=GET,POST,PATCH,DELETE,OPTIONS
             - CORS_HEADERS=Origin,Authorization,Content-Type
-            - HERRENCORP_MAIL_URL=http://python.recruit.herrencorp.com/api/v1/mail
+            - HERRENCORP_BASE_URL=http://python.recruit.herrencorp.com
             - HERRENCORP_MAIL_AUTH=herren-recruit-python
+            - HERRENCORP_SEND_MAIL_URL=/api/v1/mail
+            - HERRENCORP_GET_MAIL_URL=/api/v1/inbox/
         ports:
             - "127.0.0.1:5000:5000"
         depends_on:
