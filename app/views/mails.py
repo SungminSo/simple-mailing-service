@@ -18,7 +18,13 @@ def send_mail(subject: str, content: str, users: list, fail_to_send: list):
             'Content-Type': 'application/x-www-form-urlencoded',
         }
         data = {'mailto': user.email, 'subject': subject, 'content': content}
-        url = Config.HERRENCORP_BASE_URL + Config.HERRENCORP_SEND_MAIL_URL
+
+        email_host = user.email.split("@")[1]
+        if email_host == 'gmail.com' or email_host == 'naver.com':
+            url = Config.HERRENCORP_BASE_URL + Config.HERRENCORP_SEND_MAIL_URL_V2
+        else:
+            url = Config.HERRENCORP_BASE_URL + Config.HERRENCORP_SEND_MAIL_URL
+
         res = requests.post(url, data=data, headers=headers)
         if res.status_code != 201:
             fail_to_send.append(user.email)
