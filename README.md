@@ -36,6 +36,10 @@ or
 make install-dev
 ```
 
+
+### API
+- Postman Docs: https://documenter.getpostman.com/view/4736816/TVYM2uvX
+
        
 ### Env
 |key                |value           |
@@ -44,7 +48,7 @@ make install-dev
 |POSTGRES_PORT      |5432            |
 |POSTGRES_USER      |developer       |
 |POSTGRES_DB_NAME   |mailing         |
-|POSRGRES_TEST_DB_NAME|mail_test     |
+|POSTGRES_TEST_DB_NAME|mail_test     |
 |POSTGRES_PASSWORD  |password        |
 |CORS_ORIGINS       |*               |
 |CORS_METHODS       |GET,POST,PATCH,DELETE,OPTIONS|
@@ -56,7 +60,7 @@ make install-dev
 |HERRENCORP_GET_MAIL_URL|/api/v1/inbox/|
 
 **for jetbrains user**
-```PYTHONUNBUFFERED=1;POSTGRES_HOST=localhost;POSTGRES_PORT=5432;POSTGRES_USER=develop;POSTGRES_DB_NAME=mailing;POSRGRES_TEST_DB_NAME=mail_test;POSTGRES_PASSWORD=password;CORS_ORIGINS=*;CORS_METHODS=GET,POST,PATCH,DELETE,OPTIONS;CORS_HEADERS=Origin,Authorization,Content-Type;FLASK_ENV=dev;HERRENCORP_BASE_URL=http://python.recruit.herrencorp.com;HERRENCORP_MAIL_AUTH=herren-recruit-python;HERRENCORP_SEND_MAIL_URL=/api/v1/mail;HERRENCORP_GET_MAIL_URL=/api/v1/inbox/```
+```PYTHONUNBUFFERED=1;POSTGRES_HOST=localhost;POSTGRES_PORT=5432;POSTGRES_USER=develop;POSTGRES_DB_NAME=mailing;POSTGRES_TEST_DB_NAME=mail_test;POSTGRES_PASSWORD=password;CORS_ORIGINS=*;CORS_METHODS=GET,POST,PATCH,DELETE,OPTIONS;CORS_HEADERS=Origin,Authorization,Content-Type;FLASK_ENV=dev;HERRENCORP_BASE_URL=http://python.recruit.herrencorp.com;HERRENCORP_MAIL_AUTH=herren-recruit-python;HERRENCORP_SEND_MAIL_URL=/api/v1/mail;HERRENCORP_GET_MAIL_URL=/api/v1/inbox/```
 
 
 ### Project Structure
@@ -67,11 +71,16 @@ make install-dev
         - users.py
     - test
         - __init__.py
+        - conftest.py
+        - test_api.py
+        - test_mail.py
+        - test_user.py
     - utils
         - __init__.py
         - validate.py
     - views
         - __init__.py
+        - mails.py
         - users.py
     - __init__.py
     - config.py
