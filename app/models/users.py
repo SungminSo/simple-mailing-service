@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy.exc import OperationalError
+from werkzeug.exceptions import NotFound
 from . import db
 
 import uuid
@@ -50,7 +50,7 @@ class User(db.Model):
     def get_all_users(page: int):
         try:
             users_list = User.query.order_by(User.id.desc()).paginate(page, per_page=USERS_PER_PAGE)
-        except OperationalError:
+        except NotFound:
             users_list = None
 
         return users_list
