@@ -4,8 +4,8 @@ services:
         image: simple-mailing-service:latest
         environment:
             - FLASK_ENV=prod
-            - POSTGRES_HOST=127.0.0.1
-            - POSTGRES_PORT=5432
+            - POSTGRES_HOST=postgres
+            - POSTGRES_PORT=5431
             - POSTGRES_USER=developer
             - POSTGRES_DB_NAME=mailing
             - POSTGRES_TEST_DB_NAME=mail_test
@@ -19,19 +19,19 @@ services:
             - HERRENCORP_SEND_MAIL_URL=/api/v1/mail
             - HERRENCORP_GET_MAIL_URL=/api/v1/inbox/
         ports:
-            - "0.0.0.0:5000:5000"
+            - "5000:5000"
         depends_on:
             - postgres
     postgres:
         image: postgres:10
         environment:
-            - POSTGRES_DB=mailing
+            - POSTGRES_DB=mail_prod
             - POSTGRES_USER=developer
-            - POSTGRES_PASSWORD=devpassword
+            - POSTGRES_PASSWORD=password
         volumes:
             - postgres-data:/var/lib/postgresql/data
         ports:
-            - "0.0.0.0:20000:5432"
+            - "5431:5432"
 
 volumes:
     postgres-data:
