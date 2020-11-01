@@ -96,6 +96,7 @@ make install-dev
 - .gitignore
 - docker-compose.yml
 - Dockerfile
+- entrypoint.sh
 - Makefile
 - manage.py
 - Pipfile

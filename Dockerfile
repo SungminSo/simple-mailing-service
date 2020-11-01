@@ -10,4 +10,5 @@ RUN pipenv install --system --dev
 
 EXPOSE 5000
 
-CMD ["python", "./manage.py", "run"]
+RUN chmod +x entrypoint.sh
+ENTRYPOINT ./entrypoint.sh
