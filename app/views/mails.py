@@ -1,7 +1,7 @@
 from flask import request, Blueprint
 from multiprocessing import Process
 
-from . import json_response
+from . import json_response, v2_mail_host_list
 from ..models.users import User, USERS_PER_PAGE
 from ..utils.validate import validate_email
 from ..config import Config
@@ -13,12 +13,22 @@ mail_api = Blueprint('mail', __name__)
 
 def send_mail(subject: str, content: str, users: list, fail_to_send: list):
     for user in users:
-        headers = {
-            'Authorization': Config.HERRENCORP_MAIL_AUTH,
-            'Content-Type': 'application/x-www-form-urlencoded',
-        }
+        email_host = user.email.split("@")[1]
+        if email_host in v2_mail_host_list:
+            headers = {
+                'Authorization': Config.HERRENCORP_MAIL_AUTH,
+                'Content-Type': 'application/x-www-form-urlencoded',
+            }
+            url = Config.HERRENCORP_BASE_URL + Config.HERRENCORP_SEND_MAIL_URL_V2
+        else:
+            headers = {
+                'Authorization': Config.HERRENCORP_MAIL_AUTH,
+                'Content-Type': 'application/json',
+            }
+            url = Config.HERRENCORP_BASE_URL + Config.HERRENCORP_SEND_MAIL_URL
+
         data = {'mailto': user.email, 'subject': subject, 'content': content}
-        url = Config.HERRENCORP_BASE_URL + Config.HERRENCORP_SEND_MAIL_URL
+
         res = requests.post(url, data=data, headers=headers)
         if res.status_code != 201:
             fail_to_send.append(user.email)

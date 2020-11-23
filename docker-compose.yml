@@ -17,6 +17,7 @@ services:
             - HERRENCORP_BASE_URL=http://python.recruit.herrencorp.com
             - HERRENCORP_MAIL_AUTH=herren-recruit-python
             - HERRENCORP_SEND_MAIL_URL=/api/v1/mail
+            - HERRENCORP_SEND_MAIL_URL_V2=/api/v2/mail
             - HERRENCORP_GET_MAIL_URL=/api/v1/inbox/
         ports:
             - "5000:5000"
