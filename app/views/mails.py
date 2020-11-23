@@ -13,17 +13,21 @@ mail_api = Blueprint('mail', __name__)
 
 def send_mail(subject: str, content: str, users: list, fail_to_send: list):
     for user in users:
-        headers = {
-            'Authorization': Config.HERRENCORP_MAIL_AUTH,
-            'Content-Type': 'application/x-www-form-urlencoded',
-        }
-        data = {'mailto': user.email, 'subject': subject, 'content': content}
-
         email_host = user.email.split("@")[1]
         if email_host == 'gmail.com' or email_host == 'naver.com':
+            headers = {
+                'Authorization': Config.HERRENCORP_MAIL_AUTH,
+                'Content-Type': 'application/x-www-form-urlencoded',
+            }
             url = Config.HERRENCORP_BASE_URL + Config.HERRENCORP_SEND_MAIL_URL_V2
         else:
+            headers = {
+                'Authorization': Config.HERRENCORP_MAIL_AUTH,
+                'Content-Type': 'application/json',
+            }
             url = Config.HERRENCORP_BASE_URL + Config.HERRENCORP_SEND_MAIL_URL
+
+        data = {'mailto': user.email, 'subject': subject, 'content': content}
 
         res = requests.post(url, data=data, headers=headers)
         if res.status_code != 201:
